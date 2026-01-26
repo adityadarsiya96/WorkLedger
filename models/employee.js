@@ -8,10 +8,11 @@ const employeSchema = new schema({
         required:true,
         unique:true
     },
-    employeeCode:{
-        type:String,
+    employeeId:{
+        type:mongoose.Schema.Types.ObjectId,
         required:true,
-        unique:true
+        unique:true,
+        ref:"User"
     },
     department:{
         type:String,
