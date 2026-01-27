@@ -8,11 +8,11 @@ const employeSchema = new schema({
         required:true,
         unique:true
     },
-    employeeId:{
-        type:mongoose.Schema.Types.ObjectId,
+    employeecode:{
+        type:String,
         required:true,
         unique:true,
-        ref:"User"
+        
     },
     department:{
         type:String,
@@ -25,13 +25,14 @@ const employeSchema = new schema({
     joiningDate:{
         type:Date,
         required:true,
-        default:Date.now
+        
     },
     status:{
         type:String,
-        default:"Active"
+        enum: ["ACTIVE", "INACTIVE"],
+        default:"ACTIVE"
     }
 
 });
 
-module.exports = mongoose.model("Employee",employeSchema)
+module.exports = mongoose.model("employee",employeSchema)

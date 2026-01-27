@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/User");
 
+// @ts-ignore
 module.exports.creatHr = async(req,res)=>{
      try {
     const { name, email, password } = req.body;

@@ -48,6 +48,7 @@ module.exports.register = async (req, res) => {
   }
 };
 
+// @ts-ignore
 module.exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -79,7 +80,9 @@ module.exports.login = async (req, res) => {
     }
 
     const token = jwt.sign(
+      // @ts-ignore
       { userId: user._id, role: user.role },
+      // @ts-ignore
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
