@@ -18,7 +18,7 @@ async function admin() {
       isActive: true
     });
 
-    console.log("✅ Admin created");
+    console.log("Admin created");
   }
 }
 

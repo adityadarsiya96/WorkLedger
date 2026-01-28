@@ -6,7 +6,7 @@ module.exports.creatHr = async(req,res)=>{
      try {
     const { name, email, password } = req.body;
 
-    // 1️⃣ Validation
+    
     if (!name || !email || !password) {
       return res.status(400).json({
         success: false,
@@ -14,7 +14,7 @@ module.exports.creatHr = async(req,res)=>{
       });
     }
 
-    // 2️⃣ Check if user already exists
+    
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(409).json({
@@ -23,10 +23,10 @@ module.exports.creatHr = async(req,res)=>{
       });
     }
 
-    // 3️⃣ Hash password
+   
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    // 4️⃣ Create HR user
+   
     const hrUser = await User.create({
       name,
       email,
@@ -35,7 +35,7 @@ module.exports.creatHr = async(req,res)=>{
       isActive: true  // HR is immediately active
     });
 
-    // 5️⃣ Return response
+    
     res.status(201).json({
       success: true,
       message: "HR user created successfully",

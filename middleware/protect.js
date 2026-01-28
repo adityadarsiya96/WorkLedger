@@ -5,12 +5,12 @@ module.exports.protect = async (req, res, next) => {
   try {
     let token;
 
-    // 1️⃣ Get token from COOKIE (primary)
+    
     if (req.cookies && req.cookies.token) {
       token = req.cookies.token;
     }
 
-    // 2️⃣ Fallback: Authorization header
+    
     else if (
       req.headers.authorization &&
       req.headers.authorization.startsWith("Bearer")
@@ -24,10 +24,9 @@ module.exports.protect = async (req, res, next) => {
       });
     }
 
-    // 3️⃣ Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // 4️⃣ Fetch user
+    
     const user = await User.findById(decoded.userId).select("-password");
 
     if (!user || !user.isActive) {

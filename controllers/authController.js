@@ -30,9 +30,8 @@ module.exports.register = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      role: "EMPLOYEE",   // 🔒 forced
-      isActive: false     // 🔒 HR approval needed
-    });
+      role: "EMPLOYEE",   
+      isActive: false     })
 
     res.status(201).json({
       success: true,
