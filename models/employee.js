@@ -31,7 +31,8 @@ const employeSchema = new schema({
         type:String,
         enum: ["ACTIVE", "INACTIVE"],
         default:"ACTIVE"
-    }
+    },
+    
 
 });
 

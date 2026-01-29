@@ -2,9 +2,13 @@ const mongoose = require("mongoose");
 const schema = mongoose.Schema;
 
 const leaveSchema = new schema({
-    employeId:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"Employee",
+    employeId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "employee", 
+        required: true
+    },
+    employecode:{
+        type:String,
         required:true
 
     },
@@ -20,6 +24,10 @@ const leaveSchema = new schema({
     endDate:{
         type:Date,
         required:true
+    },
+    isPaid: {
+        type: Boolean,
+        default: true
     },
     status:{
         type:String,
@@ -38,8 +46,13 @@ const leaveSchema = new schema({
     createdAt:{
         type:Date,
         default:Date.now
+    },
+    leaveBalance: { 
+        type: Number, 
+        default: 20
     }
 
 });
 
 module.exports = mongoose.model("Leave",leaveSchema);
+

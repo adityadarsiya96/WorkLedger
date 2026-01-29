@@ -1,6 +1,7 @@
 // controllers/hrController.js
 const User = require("../models/User");
 const employeeModel = require("../models/employee");
+const Leave = require("../models/leave")
 
 
 // @ts-ignore
@@ -114,8 +115,6 @@ module.exports.showRequest = async (req,res) =>{
       })
     
   }
-  
-
 
   }catch(error){
     console.error("Fetch Error:", error);
@@ -126,4 +125,44 @@ module.exports.showRequest = async (req,res) =>{
       error: error.message 
     });
   }
+}
+
+// @ts-ignore
+module.exports.showLeave = async(req,res)=>{
+  try{
+    let leaves = await Leave.find()
+    if(leaves && leaves.length>0){
+      res.status(200).json({
+        success:true,
+        count:leaves.length,
+        data:leaves
+      })
+    }
+    else{
+      res.json({
+        success:"true",
+        message:"No pending request"
+      })
+    }
+    
+
+  }catch(error){
+    console.log(error)
+    res.status(500).json({
+      status:true,
+      message:"Internal Server Error"
+    })
+
+  }
+}
+// @ts-ignore
+module.exports.approveLeave =(req,res)=>{
+  try{
+    let {leaveId,status} = req.body
+    console.log(leaveId,status)
+    res.send("ok").status(200)
+  }catch(err){
+    console.log(err)
+  }
+
 }
