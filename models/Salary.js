@@ -9,7 +9,6 @@ const salarySchema = new mongoose.Schema(
       index: true
     },
 
-   
     basic: {
       type: Number,
       required: true,
@@ -29,12 +28,11 @@ const salarySchema = new mongoose.Schema(
     },
 
     deductions: {
-      type: Number,
-      default: 0,
-      min: 0
+      pf: { type: Number, default: 0, min: 0 },
+      tax: { type: Number, default: 0, min: 0 },
+      other: { type: Number, default: 0, min: 0 }
     },
 
-    
     effectiveFrom: {
       type: Date,
       required: true
@@ -51,30 +49,31 @@ const salarySchema = new mongoose.Schema(
       required: true
     }
   },
-  {
-    timestamps: true
-  }
-);
+  { timestamps: true }
+)
 
-/**
- * BUSINESS RULE:
- * Only ONE active salary structure per employee
- */
+
 salarySchema.index(
   { employeeId: 1, isActive: 1 },
   { unique: true, partialFilterExpression: { isActive: true } }
-);
+)
 
-/**
- * Virtual field (not stored in DB)
- * Gross salary = basic + hra + allowances
- */
+
 salarySchema.virtual("grossSalary").get(function () {
   return this.basic + this.hra + this.allowances;
-});
+})
 
-salarySchema.set("toJSON", { virtuals: true });
-salarySchema.set("toObject", { virtuals: true });
+
+salarySchema.virtual("netSalary").get(function () {
+  const totalDeductions =
+    (this.deductions?.pf || 0) +
+    (this.deductions?.tax || 0) +
+    (this.deductions?.other || 0);
+
+  return this.grossSalary - totalDeductions
+})
+
+salarySchema.set("toJSON", { virtuals: true })
+salarySchema.set("toObject", { virtuals: true })
 
 module.exports = mongoose.model("Salary", salarySchema)
-

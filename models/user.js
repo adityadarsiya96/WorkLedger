@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ["ADMIN", "HR", "EMPLOYEE"],
+    enum: ["ADMIN", "HR", "EMPLOYEE","MANAGER"],
     required: true
   },
   isActive: {
@@ -26,6 +26,11 @@ const userSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
+  },
+   manager: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    default: null
   }
 });
 
