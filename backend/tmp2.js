@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const User = require("./models/User");
 
-const uri = "mongodb+srv://adityadarsiya96:adityaDarsiya@cluster0.ypemxay.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const uri = process.env.MONGO_URI;
 
 async function run() {
   await mongoose.connect(uri);
