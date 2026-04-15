@@ -13,12 +13,14 @@ const RegisterPage = () => {
     handleSubmit,
     formState: { errors, isSubmitting }
   } = useForm();
+  const baseUrl = import.meta.env.VITE_API_URL;
+    
 
   const formSubmit = async (data) => {
     try {
       setAuthError("");
       setSuccessMsg("");
-      const response = await axios.post("http://localhost:3000/auth/register", data);
+      const response = await axios.post(`${baseUrl}/auth/register`, data);
 
       if (response.data.success) {
          setSuccessMsg("Registration successful! Your account is pending HR approval.");

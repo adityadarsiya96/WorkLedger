@@ -17,6 +17,7 @@ const AdminDashboard = () => {
   const [hrForm, setHrForm] = useState({ name: '', email: '', password: '' });
   const [isCreatingHr, setIsCreatingHr] = useState(false);
   const [message, setMessage] = useState('');
+  const baseUrl = import.meta.env.VITE_API_URL;
 
   const [dashboardStats, setDashboardStats] = useState({
     totalUsers: 0,
@@ -27,7 +28,7 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     if (activeTab === 'overview') {
-      axios.get('http://localhost:3000/admin/dashboard-stats', { withCredentials: true })
+      axios.get(`${baseUrl}/admin/dashboard-stats`, { withCredentials: true })
         .then(res => {
           if (res.data.success) {
             setDashboardStats(res.data.stats);
@@ -46,7 +47,7 @@ const AdminDashboard = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.get('http://localhost:3000/auth/logout', { withCredentials: true });
+      await axios.get(`${baseUrl}/auth/logout`, { withCredentials: true });
       setUser(null);
       window.location.href = '/login';
     } catch (error) {
@@ -59,7 +60,7 @@ const AdminDashboard = () => {
     setIsCreatingHr(true);
     setMessage('');
     try {
-      const res = await axios.post('http://localhost:3000/admin/hr', hrForm, { withCredentials: true });
+      const res = await axios.post(`${baseUrl}/admin/hr`, hrForm, { withCredentials: true });
       setMessage(res.data.message);
       setHrForm({ name: '', email: '', password: '' });
     } catch (err) {

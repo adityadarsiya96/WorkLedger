@@ -16,13 +16,14 @@ const ManagerDashboard = () => {
 
   const [team, setTeam] = useState([]);
   const [leaves, setLeaves] = useState([]);
+  const baseUrl = import.meta.env.VITE_API_URL;
   
   const fetchDashboardData = async () => {
     try {
-      const pRes = await axios.get('http://localhost:3000/manager/view-team', { withCredentials: true });
+      const pRes = await axios.get(`${baseUrl}/manager/view-team`, { withCredentials: true });
       if (pRes.data.success) setTeam(pRes.data.data || []);
 
-      const lRes = await axios.get('http://localhost:3000/manager/team-leaves', { withCredentials: true });
+      const lRes = await axios.get(`${baseUrl}/manager/team-leaves`, { withCredentials: true });
       if (lRes.data.success) setLeaves(lRes.data.data || []);
     } catch (err) {
       console.error("Failed to load dashboard data", err);
@@ -35,7 +36,7 @@ const ManagerDashboard = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.get('http://localhost:3000/auth/logout', { withCredentials: true });
+      await axios.get(`${baseUrl}/auth/logout`, { withCredentials: true });
       setUser(null);
       window.location.href = '/login';
     } catch (error) {
@@ -46,7 +47,7 @@ const ManagerDashboard = () => {
   const handleLeaveAction = async (leaveId, status) => {
     if(!confirm(`Are you sure you want to ${status.toLowerCase()} this request?`)) return;
     try {
-      await axios.post('http://localhost:3000/manager/approve-leave', { leaveId, status }, { withCredentials: true });
+      await axios.post(`${baseUrl}/manager/approve-leave`, { leaveId, status }, { withCredentials: true });
       fetchDashboardData();
     } catch (err) {
         alert("Error updating leave: "  + (err.response?.data?.message || err.message));

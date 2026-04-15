@@ -15,6 +15,7 @@ import axios from 'axios';
 const EmployeeDashboard = () => {
   const { user, setUser } = useAuth();
   const [activeTab, setActiveTab] = useState('overview');
+  const baseUrl = import.meta.env.VITE_API_URL;
 
   // Dashboard State
   const [profile, setProfile] = useState(null);
@@ -26,20 +27,21 @@ const EmployeeDashboard = () => {
   const [leaveForm, setLeaveForm] = useState({ type: 'Sick Leave', startDate: '', endDate: '', reason: '' });
   const [isApplying, setIsApplying] = useState(false);
   const [message, setMessage] = useState('');
+  
 
   // Fetch Data
   const fetchDashboardData = async () => {
     try {
-      const pRes = await axios.get('http://localhost:3000/employee/employeeProfile', { withCredentials: true });
+      const pRes = await axios.get(`${baseUrl}/employee/employeeProfile`, { withCredentials: true });
       if (pRes.data.success) setProfile(pRes.data.data);
 
-      const lRes = await axios.get('http://localhost:3000/employee/viewLeave', { withCredentials: true });
+      const lRes = await axios.get(`${baseUrl}/employee/viewLeave`, { withCredentials: true });
       if (lRes.data.success) setLeaves(lRes.data.data);
 
-      const sRes = await axios.get('http://localhost:3000/employee/viewsalary', { withCredentials: true });
+      const sRes = await axios.get(`${baseUrl}/employee/viewsalary`, { withCredentials: true });
       if (sRes.data.success) setSalary(sRes.data.data);
 
-      const prRes = await axios.get('http://localhost:3000/employee/viewpayroll', { withCredentials: true });
+      const prRes = await axios.get(`${baseUrl}/employee/viewpayroll`, { withCredentials: true });
       if (prRes.data.success) setPayrolls(prRes.data.data);
 
     } catch (err) {
@@ -53,7 +55,7 @@ const EmployeeDashboard = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.get('http://localhost:3000/auth/logout', { withCredentials: true });
+      await axios.get(`${baseUrl}/auth/logout`, { withCredentials: true });
       setUser(null);
       window.location.href = '/login';
     } catch (error) {
@@ -66,7 +68,7 @@ const EmployeeDashboard = () => {
     setIsApplying(true);
     setMessage('');
     try {
-      const res = await axios.post('http://localhost:3000/employee/apply-leave', leaveForm, { withCredentials: true });
+      const res = await axios.post(`${baseUrl}/employee/apply-leave`, leaveForm, { withCredentials: true });
       setMessage(res.data.message);
       setLeaveForm({ type: 'Sick Leave', startDate: '', endDate: '', reason: '' });
       fetchDashboardData(); // Refresh leave history
@@ -80,7 +82,7 @@ const EmployeeDashboard = () => {
   const handleCancelLeave = async (id) => {
     if(!confirm("Are you sure you want to cancel this leave?")) return;
     try {
-       await axios.delete(`http://localhost:3000/employee/cancel-leave/${id}`, { withCredentials: true });
+       await axios.delete(`${baseUrl}/employee/cancel-leave/${id}`, { withCredentials: true });
        fetchDashboardData();
     } catch (err) {
        alert("Error cancelling leave.");

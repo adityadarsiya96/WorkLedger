@@ -40,10 +40,11 @@ const HRDashboard = () => {
     employeeId: '', basic: '', hra: '', allowances: '', pf: '', tax: '', other: '', effectiveFrom: ''
   });
   const [isDefiningSalary, setIsDefiningSalary] = useState(false);
+  const baseUrl = import.meta.env.VITE_API_URL;
 
   const fetchEmployees = async () => {
       try {
-        const res = await axios.get('http://localhost:3000/hr/show-employee', { withCredentials: true });
+        const res = await axios.get(`${baseUrl}/hr/show-employee`, { withCredentials: true });
         if(res.data.success && res.data.data) {
           setEmployees(res.data.data);
         } else {
@@ -56,7 +57,7 @@ const HRDashboard = () => {
 
   const fetchPayrolls = async () => {
     try {
-      const res = await axios.get('http://localhost:3000/hr/payrolls', { withCredentials: true });
+      const res = await axios.get(`${baseUrl}/hr/payrolls`, { withCredentials: true });
       if(res.data.success) setPayrolls(res.data.data);
     } catch(err) {
       console.error(err);
@@ -66,7 +67,7 @@ const HRDashboard = () => {
   const handlePromoteToManager = async (employeeDocId) => {
     if(!confirm("Promote this employee to Manager?")) return;
     try {
-      const res = await axios.put(`http://localhost:3000/hr/create-manager/${employeeDocId}`, {}, { withCredentials: true });
+      const res = await axios.put(`${baseUrl}/hr/create-manager/${employeeDocId}`, {}, { withCredentials: true });
       alert(res.data.message);
       fetchEmployees();
     } catch (err) {
@@ -77,7 +78,7 @@ const HRDashboard = () => {
   const handleAssignManager = async (employeeDocId) => {
     if(!selectedManagerId) return alert("Please select a manager first");
     try {
-      const res = await axios.put(`http://localhost:3000/hr/assign-manager`, {
+      const res = await axios.put(`${baseUrl}/hr/assign-manager`, {
         employeeId: employeeDocId,
         managerId: selectedManagerId 
       }, { withCredentials: true });
@@ -92,7 +93,7 @@ const HRDashboard = () => {
 
   useEffect(() => {
     if (activeTab === 'employees' || activeTab === 'payroll') {
-      axios.get('http://localhost:3000/hr/show-employee', { withCredentials: true })
+      axios.get(`${baseUrl}/hr/show-employee`, { withCredentials: true })
         .then(res => {
            if(res.data.success && res.data.data) {
              setEmployees(res.data.data);
@@ -111,7 +112,7 @@ const HRDashboard = () => {
     e.preventDefault();
     setIsProcessingPayroll(true);
     try {
-      const res = await axios.post('http://localhost:3000/hr/payroll/run', {
+      const res = await axios.post(`${baseUrl}/hr/payroll/run`, {
         month: Number(runPayrollForm.month),
         year: Number(runPayrollForm.year)
       }, { withCredentials: true });
@@ -120,7 +121,7 @@ const HRDashboard = () => {
       fetchPayrolls();
       
       // Also silently refresh dashboard stats globally
-      axios.get('http://localhost:3000/hr/dashboard-stats', { withCredentials: true })
+      axios.get(`${baseUrl}/hr/dashboard-stats`, { withCredentials: true })
         .then(res => { if(res.data.success) setDashboardStats(res.data.stats); });
         
     } catch(err) {
@@ -147,7 +148,7 @@ const HRDashboard = () => {
         effectiveFrom: salaryForm.effectiveFrom
       };
       
-      const res = await axios.post('http://localhost:3000/hr/define-salary', payload, { withCredentials: true });
+      const res = await axios.post(`${baseUrl}/hr/define-salary`, payload, { withCredentials: true });
       alert(res.data.message);
       
       setSalaryForm({ employeeId: '', basic: '', hra: '', allowances: '', pf: '', tax: '', other: '', effectiveFrom: '' });
@@ -160,7 +161,7 @@ const HRDashboard = () => {
 
   useEffect(() => {
     if (activeTab === 'requests') {
-      axios.get('http://localhost:3000/hr/show-request', { withCredentials: true })
+      axios.get(`${baseUrl}/hr/show-request`, { withCredentials: true })
         .then(res => {
            if(res.data.success && res.data.data) {
              setRequests(res.data.data);
@@ -174,7 +175,7 @@ const HRDashboard = () => {
 
   const handleApprove = async (userId) => {
     try {
-      await axios.post('http://localhost:3000/hr/create-employee', {
+      await axios.post(`${baseUrl}/hr/create-employee`, {
         userId,
         ...formData
       }, { withCredentials: true });
@@ -182,7 +183,7 @@ const HRDashboard = () => {
       setApproving(null);
       setFormData({ employeecode: '', department: '', designation: '', joiningDate: '' });
       
-      const res = await axios.get('http://localhost:3000/hr/show-request', { withCredentials: true });
+      const res = await axios.get(`${baseUrl}/hr/show-request`, { withCredentials: true });
       if(res.data.success && res.data.data) setRequests(res.data.data);
       else setRequests([]);
       
@@ -196,7 +197,7 @@ const HRDashboard = () => {
     const fetchStats = async () => {
       if (activeTab === 'overview') {
         try {
-          const response = await axios.get('http://localhost:3000/hr/dashboard-stats', { withCredentials: true });
+          const response = await axios.get(`${baseUrl}/hr/dashboard-stats`, { withCredentials: true });
           if (response.data.success) {
             setDashboardStats(response.data.stats);
           }
@@ -217,7 +218,7 @@ const HRDashboard = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.get('http://localhost:3000/auth/logout', { withCredentials: true });
+    await axios.get(`${baseUrl}/auth/logout`, { withCredentials: true });
       setUser(null);
       window.location.href = '/login';
     } catch (error) {

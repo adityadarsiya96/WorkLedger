@@ -9,16 +9,19 @@ const LoginPage = () => {
     const { setUser } = useAuth();
     const [loginError, setLoginError] = useState("");
 
+
     const {
         register,
         handleSubmit,
         formState: { errors, isSubmitting }
     } = useForm();
+    const baseUrl = import.meta.env.VITE_API_URL;
+    
 
     const formSubmit = async (data) => {
         try {
             setLoginError("");
-            const response = await axios.post("http://localhost:3000/auth/login", data, {
+            const response = await axios.post(`${baseUrl}/auth/login`, data, {
                 withCredentials: true
             });
 

@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 
 const HeroSection = () => {
   const navigate = useNavigate();
+  const baseUrl = import.meta.env.VITE_API_URL;
+  console.log(baseUrl);
   const navigatePage =async()=>{
     await navigate("/login");
 
